@@ -5,8 +5,10 @@ async function vote(menu_name, comment) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/votes`, {
     method: "POST",
     headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: `Bearer ${SUPABASE_KEY}`,
+  "Content-Type": "application/json", // 必須
+  "apikey": "あなたのSupabaseのanonキー",
+  "Authorization": "Bearer あなたのSupabaseのanonキー"
+},
       "Content-Type": "application/json",
       Prefer: "return=representation"
     },
