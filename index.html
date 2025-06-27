@@ -3,32 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>推しメニューランキング</title>
+  <title>推しメニュー投票</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h2>🥇 推しメニューランキング</h2>
-    <form id="vote-form">
-      <label for="menu">推しメニューを選んでください：</label>
-      <select id="menu" name="menu_name" required>
-        <option value="">--- メニューを選択 ---</option>
-        <option value="焼き鳥">焼き鳥</option>
-        <option value="刺身">刺身</option>
-        <option value="だし巻き">だし巻き</option>
-      </select>
+  <div class="vote-container">
+    <h2>🥇 現在のランキング</h2>
+    <ul id="ranking"></ul>
 
-      <label for="comment">コメント（任意）：</label>
-      <textarea id="comment" name="comment" placeholder="理由やおすすめポイントなど"></textarea>
+    <form id="vote-form">
+      <label for="menu-select">推しメニューを選んでください：</label>
+      <input type="text" id="menu-search" placeholder="メニューを検索..." />
+      <select id="menu-select" required></select>
+
+      <label for="comment">コメント（任意）:</label>
+      <textarea id="comment" placeholder="理由やおすすめポイントなど"></textarea>
 
       <button type="submit">投票する</button>
+      <p id="message"></p>
     </form>
-
-    <div id="ranking">
-      <h3>現在のランキング</h3>
-      <ul id="ranking-list"></ul>
-    </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
