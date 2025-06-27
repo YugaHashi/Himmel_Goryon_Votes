@@ -1,50 +1,42 @@
 body {
-  font-family: sans-serif;
   margin: 0;
+  padding: 0;
+  background-color: transparent;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.container {
+  max-width: 360px;
+  margin: 20px auto;
   padding: 20px;
-  background: transparent;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-.vote-container {
-  max-width: 400px;
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+h2, label, h3 {
+  margin: 0 0 10px;
+  color: #333;
 }
 
-h2 {
-  font-size: 1.2rem;
-  text-align: center;
-}
-
-label {
-  display: block;
-  margin: 15px 0 5px;
-}
-
-select, textarea, input[type="text"] {
+select, textarea, button {
   width: 100%;
+  margin-bottom: 15px;
   padding: 8px;
-  margin-bottom: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
 button {
-  width: 100%;
-  padding: 10px;
-  background: #0a7f49;
+  background-color: #00b894;
   color: white;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
 }
 
-#message {
-  text-align: center;
-  margin-top: 10px;
-  color: #0077cc;
+button:hover {
+  background-color: #019875;
 }
