@@ -1,63 +1,42 @@
-const SUPABASE_URL = "https://あなたのURL.supabase.co";
-const SUPABASE_KEY = "public-anon-key"; // supabaseから取得
-const headers = {
-  "apikey": SUPABASE_KEY,
-  "Authorization": `Bearer ${SUPABASE_KEY}`,
-  "Content-Type": "application/json",
-};
+const SUPABASE_URL = 'https://iirzcvptqjnswimxoyds.supabase.co';
+const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
+const voteForm = document.getElementById("vote-form");
+const rankingList = document.getElementById("ranking-list");
+const menuSelect = document.getElementById("menu");
 
-const menus = [
-  "焼き鳥", "おでん", "唐揚げ", "ポテトサラダ", "だし巻き卵", "馬刺し", "冷奴", "もつ煮", "餃子", "枝豆"
-];
-
-// ▼ 1. 検索＆選択用
-const menuSelect = document.getElementById("menu-select");
-const searchInput = document.getElementById("menu-search");
-
-function populateMenus(filter = "") {
-  menuSelect.innerHTML = "";
-  menus
-    .filter(menu => menu.includes(filter))
-    .forEach(menu => {
-      const option = document.createElement("option");
-      option.value = menu;
-      option.textContent = menu;
-      menuSelect.appendChild(option);
-    });
-}
-
-searchInput.addEventListener("input", () => {
-  populateMenus(searchInput.value);
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadMenus();
+  loadRanking();
 });
-populateMenus();
 
-// ▼ 2. ランキング表示
-async function loadRanking() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/votes?select=menu_name`, {
-    headers
+async function loadMenus() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/menus?select=name`, {
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`
+    }
   });
-  const votes = await res.json();
-  const counts = {};
-  votes.forEach(v => {
-    counts[v.menu_name] = (counts[v.menu_name] || 0) + 1;
-  });
-  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
 
-  const rankingEl = document.getElementById("ranking");
-  rankingEl.innerHTML = "";
-  sorted.forEach(([name, count], i) => {
-    const li = document.createElement("li");
-    li.textContent = `${i + 1}位：${name}（${count}票）`;
-    rankingEl.appendChild(li);
+  const data = await res.json();
+  data.forEach(({ name }) => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    menuSelect.appendChild(option);
+  });
+
+  new TomSelect(menuSelect, {
+    create: false,
+    sortField: "text",
+    placeholder: "メニューを検索..."
   });
 }
-loadRanking();
 
-// ▼ 3. 投票処理（localStorageで1回制限）
-document.getElementById("vote-form").addEventListener("submit", async (e) => {
+voteForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   if (localStorage.getItem("hasVoted")) {
-    document.getElementById("message").textContent = "すでに投票済みです。";
+    alert("既に投票済みです。");
     return;
   }
 
@@ -66,15 +45,47 @@ document.getElementById("vote-form").addEventListener("submit", async (e) => {
 
   const res = await fetch(`${SUPABASE_URL}/rest/v1/votes`, {
     method: "POST",
-    headers,
-    body: JSON.stringify({ menu_name: menu, comment }),
+    headers: {
+      "Content-Type": "application/json",
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`
+    },
+    body: JSON.stringify({
+      menu_name: menu,
+      comment: comment,
+      created_at: new Date().toISOString()
+    })
   });
 
   if (res.ok) {
     localStorage.setItem("hasVoted", "true");
-    document.getElementById("message").textContent = "投票が完了しました！";
+    alert("投票ありがとうございました！");
+    voteForm.reset();
     loadRanking();
   } else {
-    document.getElementById("message").textContent = "投票に失敗しました。";
+    alert("投票に失敗しました");
   }
 });
+
+async function loadRanking() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/votes?select=menu_name`, {
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`
+    }
+  });
+
+  const data = await res.json();
+  const counts = {};
+  data.forEach(({ menu_name }) => {
+    counts[menu_name] = (counts[menu_name] || 0) + 1;
+  });
+
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  rankingList.innerHTML = "";
+  sorted.forEach(([menu, count], i) => {
+    const li = document.createElement("li");
+    li.textContent = `${i + 1}位：${menu}（${count}票）`;
+    rankingList.appendChild(li);
+  });
+}
