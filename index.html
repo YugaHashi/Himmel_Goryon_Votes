@@ -4,117 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>推しメニュー投票</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-      margin: 0;
-      max-width: 600px;
-      margin: auto;
-    }
-    h2 {
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 4px;
-    }
-    .menu-item {
-      margin: 8px 0;
-    }
-    .ranking {
-      margin-bottom: 30px;
-    }
-    input, textarea, button, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      margin-bottom: 14px;
-      font-size: 1em;
-    }
-    button {
-      background-color: black;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      opacity: 0.9;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="container">
+    <h1>🥇 推しメニューランキング</h1>
+    <div id="ranking">読み込み中...</div>
 
-  <h2>🥇 推しメニューランキング</h2>
-  <div id="ranking" class="ranking">読み込み中...</div>
+    <h2>✉️ 投票する</h2>
+    <form id="voteForm">
+      <label>推しメニューを選んでください：</label>
+      <select id="menuSelect" required>
+        <option value="">-- メニューを選択 --</option>
+        <option value="カツサンド">カツサンド</option>
+        <option value="チキン南蛮">チキン南蛮</option>
+        <option value="牛すじ煮込み">牛すじ煮込み</option>
+      </select>
 
-  <h2>📩 投票する</h2>
-  <form id="vote-form">
-    <label for="menu">推しメニューを選んでください：</label>
-    <select id="menu" required>
-      <option value="">-- メニューを選択 --</option>
-      <option value="唐揚げ">唐揚げ</option>
-      <option value="山芋の竜田揚げ">山芋の竜田揚げ</option>
-      <option value="ポテサラ">ポテサラ</option>
-      <option value="だし巻き卵">だし巻き卵</option>
-    </select>
+      <label>コメント（任意）：</label>
+      <textarea id="comment" placeholder="理由やおすすめポイントなど"></textarea>
 
-    <label for="comment">コメント（任意）:</label>
-    <textarea id="comment" rows="3" placeholder="理由やおすすめポイントなど"></textarea>
+      <button type="submit">投票する</button>
+    </form>
+    <div id="resultMessage"></div>
+  </div>
 
-    <button type="submit">投票する</button>
-  </form>
-
-  <h2>📝 店舗の評価</h2>
-  <button onclick="window.open('https://forms.gle/YOUR_GOOGLE_FORM_URL', '_blank')">評価フォームに進む</button>
-
-  <script>
-    const SUPABASE_URL = 'https://iirzcvptqjnswimxoyds.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpcnpjdnB0cWpuc3dpbXhveWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEwMDk3MzEsImV4cCI6MjA2NjU4NTczMX0.SBSW6h0lF4_YW0Rmnr1rDwTg1ApI-U2kCfkHJHZHy6E';
-
-    async function fetchRanking() {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/votes?select=menu_name`, {
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${SUPABASE_KEY}`
-        }
-      });
-      const data = await res.json();
-      const counts = {};
-      data.forEach(vote => {
-        counts[vote.menu_name] = (counts[vote.menu_name] || 0) + 1;
-      });
-      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-      const rankingDiv = document.getElementById('ranking');
-      rankingDiv.innerHTML = sorted.length === 0 ? 'まだ投票がありません。' : '';
-      sorted.forEach(([menu, count], i) => {
-        rankingDiv.innerHTML += `<div class="menu-item">#${i + 1} ${menu} - ${count}票</div>`;
-      });
-    }
-
-    fetchRanking();
-
-    document.getElementById('vote-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const menu = document.getElementById('menu').value;
-      const comment = document.getElementById('comment').value;
-
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/votes`, {
-        method: 'POST',
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json',
-          Prefer: 'return=representation'
-        },
-        body: JSON.stringify({ menu_name: menu, comment })
-      });
-
-      if (res.ok) {
-        alert('投票ありがとうございました！');
-        document.getElementById('vote-form').reset();
-        fetchRanking();
-      } else {
-        alert('エラーが発生しました。もう一度お試しください。');
-      }
-    });
-  </script>
+  <script src="script.js" type="module"></script>
 </body>
 </html>
