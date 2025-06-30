@@ -26,6 +26,8 @@ h2 {
   font-size: 18px; /* ← ここでサイズ調整 */
   margin: 0 0 10px;
   color: #333;
+  text-align: center;
+  line-height: 1.4;
 }
 
 /* 入力・ボタンの共通スタイル */
