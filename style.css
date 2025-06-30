@@ -41,30 +41,35 @@ label {
   font-size: 14px;
   color: #ffffff;
 }
-
-#ranking-wrapper {
-  background: linear-gradient(to bottom right, #d0eefe, #ffffff);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 20px;
-  color: #014f86; /* 青系テキストで視認性アップ */
-}
-
-#ranking-wrapper h2 {
+h2 {
   font-size: 20px;
   text-align: center;
-  margin-bottom: 14px;
-  color: #014f86;
+  margin-bottom: 10px;
+  color: #333; /* 見やすく黒系に */
 }
 
-#ranking-wrapper ul#ranking-list {
+/* ランキング表示枠 */
+#ranking-box {
+  background: white;
+  border-radius: 20px;
+  padding: 16px;
+  margin: 0 auto 20px;
+  box-shadow:
+    inset 8px 8px 0px #b2ebf2,
+    inset -8px -8px 0px #b2ebf2;
+  max-width: 360px;
+}
+
+/* ランキングリストの文字調整 */
+#ranking-box ul#ranking-list {
   list-style: none;
   padding-left: 0;
+  margin: 0;
   font-size: 16px;
-  margin-bottom: 0;
+  color: #333;
 }
 
-#ranking-wrapper ul#ranking-list li {
+#ranking-box ul#ranking-list li {
   margin-bottom: 8px;
   font-weight: 600;
 }
