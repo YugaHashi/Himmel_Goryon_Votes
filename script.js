@@ -1,5 +1,5 @@
 const SUPABASE_URL = 'https://iirzcvptqjnswimxoyds.supabase.co';
-const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
+const SUPABASE_KEY = 'YOUR_SUPABASE_KEY'; // ← Supabaseのanonキーに置き換えてください
 
 const voteForm = document.getElementById("vote-form");
 const rankingList = document.getElementById("ranking-list");
@@ -19,12 +19,19 @@ async function loadMenus() {
   });
 
   const data = await res.json();
+
+  // メニューの option を追加
   data.forEach(({ name }) => {
     const option = document.createElement("option");
     option.value = name;
     option.textContent = name;
     menuSelect.appendChild(option);
   });
+
+  // TomSelectを初期化（既に初期化済みなら破棄）
+  if (menuSelect.tomselect) {
+    menuSelect.tomselect.destroy();
+  }
 
   new TomSelect(menuSelect, {
     create: false,
@@ -71,7 +78,7 @@ voteForm.addEventListener("submit", async (e) => {
 async function loadRanking() {
   const now = new Date();
   const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0'); // 01〜12
+  const month = String(now.getMonth() + 1).padStart(2, '0'); // 月を2桁で取得
   const firstDay = `${year}-${month}-01T00:00:00Z`;
 
   const res = await fetch(`${SUPABASE_URL}/rest/v1/votes?select=menu_name&created_at=gte.${firstDay}`, {
@@ -83,12 +90,14 @@ async function loadRanking() {
 
   const data = await res.json();
   const counts = {};
+
   data.forEach(({ menu_name }) => {
     counts[menu_name] = (counts[menu_name] || 0) + 1;
   });
 
   const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
   rankingList.innerHTML = "";
+
   sorted.forEach(([menu, count], i) => {
     const li = document.createElement("li");
     li.textContent = `${i + 1}位：${menu}（${count}票）`;
