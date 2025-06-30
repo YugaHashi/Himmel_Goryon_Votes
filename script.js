@@ -1,5 +1,5 @@
 const SUPABASE_URL = 'https://iirzcvptqjnswimxoyds.supabase.co';
-const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpcnpjdnB0cWpuc3dpbXhveWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEwMDk3MzEsImV4cCI6MjA2NjU4NTczMX0.SBSW6h0lF4_YW0Rmnr1rDwTg1ApI-U2kCfkHJHZHy6E';
 const voteForm = document.getElementById("vote-form");
 const rankingList = document.getElementById("ranking-list");
 const menuSelect = document.getElementById("menu");
