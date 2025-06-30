@@ -42,6 +42,33 @@ label {
   color: #ffffff;
 }
 
+#ranking-wrapper {
+  background: linear-gradient(to bottom right, #d0eefe, #ffffff);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+  color: #014f86; /* 青系テキストで視認性アップ */
+}
+
+#ranking-wrapper h2 {
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 14px;
+  color: #014f86;
+}
+
+#ranking-wrapper ul#ranking-list {
+  list-style: none;
+  padding-left: 0;
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+#ranking-wrapper ul#ranking-list li {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
 select, textarea, button {
   width: 100%;
   margin-bottom: 15px;
