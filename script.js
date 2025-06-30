@@ -95,7 +95,7 @@ async function loadRanking() {
     counts[menu_name] = (counts[menu_name] || 0) + 1;
   });
 
-  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3);
   rankingList.innerHTML = "";
 
   sorted.forEach(([menu, count], i) => {
