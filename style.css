@@ -15,11 +15,20 @@ body {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-h2, label, h3 {
+/* 共通見出しやラベル */
+label, h3 {
   margin: 0 0 10px;
   color: #333;
 }
 
+/* タイトルだけフォントサイズを調整 */
+h2 {
+  font-size: 18px; /* ← ここでサイズ調整 */
+  margin: 0 0 10px;
+  color: #333;
+}
+
+/* 入力・ボタンの共通スタイル */
 select, textarea, button {
   width: 100%;
   margin-bottom: 15px;
@@ -39,4 +48,10 @@ button {
 
 button:hover {
   background-color: #019875;
+}
+
+/* ランキングのメニュー名の文字サイズを小さく */
+#ranking-list li {
+  font-size: 14px;  /* ← メニュー名のフォントサイズ */
+  margin-bottom: 4px;
 }
