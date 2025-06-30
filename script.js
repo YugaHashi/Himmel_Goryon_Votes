@@ -1,9 +1,11 @@
 const SUPABASE_URL = 'https://iirzcvptqjnswimxoyds.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpcnpjdnB0cWpuc3dpbXhveWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEwMDk3MzEsImV4cCI6MjA2NjU4NTczMX0.SBSW6h0lF4_YW0Rmnr1rDwTg1ApI-U2kCfkHJHZHy6E'; // ← Supabaseのanonキーに置き換えてください
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpcnpjdnB0cWpuc3dpbXhveWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEwMDk3MzEsImV4cCI6MjA2NjU4NTczMX0.SBSW6h0lF4_YW0Rmnr1rDwTg1ApI-U2kCfkHJHZHy6E'; // あなたのanonキーを使用
 
 const voteForm = document.getElementById("vote-form");
 const rankingList = document.getElementById("ranking-list");
 const menuSelect = document.getElementById("menu");
+
+let hasSubmitted = false; // ✅ ページ内で1回のみ制限
 
 document.addEventListener("DOMContentLoaded", async () => {
   await loadMenus();
@@ -28,7 +30,7 @@ async function loadMenus() {
     menuSelect.appendChild(option);
   });
 
-  // TomSelectを初期化（既に初期化済みなら破棄）
+  // TomSelectの初期化
   if (menuSelect.tomselect) {
     menuSelect.tomselect.destroy();
   }
@@ -43,8 +45,8 @@ async function loadMenus() {
 voteForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  if (localStorage.getItem("hasVoted")) {
-    alert("既に投票済みです。");
+  if (hasSubmitted) {
+    alert("このページではすでに投票済みです。");
     return;
   }
 
@@ -66,22 +68,22 @@ voteForm.addEventListener("submit", async (e) => {
   });
 
   if (res.ok) {
-    localStorage.setItem("hasVoted", "true");
+    hasSubmitted = true; // ✅ 再送信を防ぐ
     alert("投票ありがとうございました！");
     voteForm.reset();
     loadRanking();
   } else {
-    alert("投票に失敗しました");
+    alert("投票に失敗しました。");
   }
 });
 
 async function loadRanking() {
   const now = new Date();
   const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0'); // 月を2桁で取得
+  const month = String(now.getMonth() + 1).padStart(2, '0');
   const firstDay = `${year}-${month}-01T00:00:00Z`;
 
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/votes?select=menu_name&created_at=gte.${firstDay}`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/votes?select=menu_name,created_at&created_at=gte.${firstDay}`, {
     headers: {
       apikey: SUPABASE_KEY,
       Authorization: `Bearer ${SUPABASE_KEY}`
