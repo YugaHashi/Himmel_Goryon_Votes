@@ -17,7 +17,9 @@
 
     <form id="vote-form">
       <label for="menu">推しメニューを検索して選んでください：</label>
-      <select id="menu" name="menu_name" required placeholder="メニューを検索..."></select>
+      <select id="menu" name="menu_name" required>
+        <option value="" disabled selected hidden>メニューを検索...</option>
+      </select>
 
       <label for="comment">コメント（任意）：</label>
       <textarea id="comment" name="comment" placeholder="理由やおすすめポイントなど"></textarea>
