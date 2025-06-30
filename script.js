@@ -69,7 +69,12 @@ voteForm.addEventListener("submit", async (e) => {
 });
 
 async function loadRanking() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/votes?select=menu_name`, {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0'); // 01〜12
+  const firstDay = `${year}-${month}-01T00:00:00Z`;
+
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/votes?select=menu_name&created_at=gte.${firstDay}`, {
     headers: {
       apikey: SUPABASE_KEY,
       Authorization: `Bearer ${SUPABASE_KEY}`
