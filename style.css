@@ -3,33 +3,42 @@ body {
   padding: 0;
   background-color: transparent;
   font-family: 'Segoe UI', sans-serif;
+  color: #fff; /* ★ 全体の文字を白く */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); /* ★ 黒の薄い影を追加 */
 }
 
 .container {
   max-width: 360px;
   margin: 20px auto;
-  padding: 20px;
+  padding: 20px 16px;
+  /* background: none; ← 背景なしに */
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
-/* 共通見出しやラベル */
-label, h3 {
+h2, label, h3 {
   margin: 0 0 10px;
-  color: #333;
-}
-
-/* タイトルだけフォントサイズを調整 */
-h2 {
-  font-size: 18px; /* ← ここでサイズ調整 */
-  margin: 0 0 10px;
-  color: #333;
   text-align: center;
+  font-size: 18px;
+  line-height: 1.4;
+  color: #fff; /* ★ タイトル文字も白に */
 }
 
-/* 入力・ボタンの共通スタイル */
+ul#ranking-list {
+  padding-left: 0;
+  list-style: none;
+  margin-bottom: 20px;
+  text-align: left;
+  font-size: 14px;
+  color: #fff;
+}
+
+ul#ranking-list li {
+  margin-bottom: 6px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
 select, textarea, button {
   width: 100%;
   margin-bottom: 15px;
@@ -38,6 +47,8 @@ select, textarea, button {
   border: 1px solid #ccc;
   font-size: 14px;
   box-sizing: border-box;
+  background-color: #fff;
+  color: #000; /* 入力欄は黒文字 */
 }
 
 button {
@@ -49,10 +60,4 @@ button {
 
 button:hover {
   background-color: #019875;
-}
-
-/* ランキングのメニュー名の文字サイズを小さく */
-#ranking-list li {
-  font-size: 14px;  /* ← メニュー名のフォントサイズ */
-  margin-bottom: 4px;
 }
