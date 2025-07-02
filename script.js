@@ -1,15 +1,33 @@
-const SUPABASE_URL = 'https://iirzcvptqjnswimxoyds.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpcnpjdnB0cWpuc3dpbXhveWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEwMDk3MzEsImV4cCI6MjA2NjU4NTczMX0.SBSW6h0lF4_YW0Rmnr1rDwTg1ApI-U2kCfkHJHZHy6E'; // あなたのanonキーを使用
+// 新しい Supabase URL と API キー
+const SUPABASE_URL = 'https://labmhtrafdslfwqmzgky.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxhYm1odHJhZmRzbGZ3cW16Z2t5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2OTAzNzksImV4cCI6MjA2NTI2NjM3OX0.CviQ3lzngfvqDFwEtDw5cTRSEICWliunXngYCokhbNs';
+
+// 日付パラメータのチェックと自動更新
+(function() {
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('date') !== today) {
+    // URL に今日の日付をセットしてリダイレクト
+    const newUrl = `${window.location.origin}${window.location.pathname}?date=${today}`;
+    window.location.replace(newUrl);
+  }
+})();
 
 const voteForm = document.getElementById("vote-form");
 const rankingList = document.getElementById("ranking-list");
 const menuSelect = document.getElementById("menu");
 
-let hasSubmitted = false; // ✅ ページ内で1回のみ制限
+// 今日の日付をキーに
+const dateKey = new URLSearchParams(window.location.search).get('date');
+let hasSubmitted = !!localStorage.getItem(`voted_${dateKey}`); // 既に投票済みか
 
 document.addEventListener("DOMContentLoaded", async () => {
   await loadMenus();
   loadRanking();
+
+  if (hasSubmitted) {
+    alert("本日の投票はすでに完了しています。");
+  }
 });
 
 async function loadMenus() {
@@ -19,22 +37,14 @@ async function loadMenus() {
       Authorization: `Bearer ${SUPABASE_KEY}`
     }
   });
-
   const data = await res.json();
-
-  // メニューの option を追加
   data.forEach(({ name }) => {
     const option = document.createElement("option");
     option.value = name;
     option.textContent = name;
     menuSelect.appendChild(option);
   });
-
-  // TomSelectの初期化
-  if (menuSelect.tomselect) {
-    menuSelect.tomselect.destroy();
-  }
-
+  if (menuSelect.tomselect) menuSelect.tomselect.destroy();
   new TomSelect(menuSelect, {
     create: false,
     sortField: "text",
@@ -46,7 +56,7 @@ voteForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   if (hasSubmitted) {
-    alert("このページではすでに投票済みです。");
+    alert("本日の投票はすでに完了しています。");
     return;
   }
 
@@ -68,7 +78,9 @@ voteForm.addEventListener("submit", async (e) => {
   });
 
   if (res.ok) {
-    hasSubmitted = true; // ✅ 再送信を防ぐ
+    hasSubmitted = true;
+    // ローカルに投票済みフラグをセット（24時間リセット不要）
+    localStorage.setItem(`voted_${dateKey}`, 'true');
     alert("投票ありがとうございました！");
     voteForm.reset();
     loadRanking();
@@ -78,6 +90,7 @@ voteForm.addEventListener("submit", async (e) => {
 });
 
 async function loadRanking() {
+  // 今月の集計はそのまま
   const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -92,14 +105,15 @@ async function loadRanking() {
 
   const data = await res.json();
   const counts = {};
-
   data.forEach(({ menu_name }) => {
     counts[menu_name] = (counts[menu_name] || 0) + 1;
   });
 
-  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3);
-  rankingList.innerHTML = "";
+  const sorted = Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3);
 
+  rankingList.innerHTML = "";
   sorted.forEach(([menu, count], i) => {
     const li = document.createElement("li");
     li.textContent = `${i + 1}位：${menu}（${count}票）`;
