@@ -3,7 +3,7 @@ body {
   padding: 0;
   background-color: transparent;
   font-family: 'Segoe UI', sans-serif;
-  color: #ffffff; /* 文字を白に */
+  color: #ffffff;
 }
 
 .container {
@@ -17,7 +17,7 @@ body {
 }
 
 h2 {
-  font-size: 20px; /* タイトルを少し大きく */
+  font-size: 20px;
   text-align: center;
   margin-bottom: 14px;
   color: #ffffff;
@@ -27,7 +27,7 @@ ul#ranking-list {
   list-style: none;
   padding-left: 0;
   margin-bottom: 20px;
-  font-size: 16px; /* ランキング文字も少し大きく */
+  font-size: 16px;
   color: #ffffff;
 }
 
@@ -42,7 +42,6 @@ label {
   color: #ffffff;
 }
 
-/* ランキング表示枠 */
 #ranking-box {
   background: white;
   border-radius: 20px;
@@ -54,7 +53,6 @@ label {
   max-width: 360px;
 }
 
-/* ランキングリストの文字調整 */
 #ranking-box ul#ranking-list {
   list-style: none;
   padding-left: 0;
